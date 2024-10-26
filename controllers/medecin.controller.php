@@ -7,22 +7,16 @@ require_once '../core/Controller.php';
 
 class MedecinController extends controller{
     private MedecinModel $medecinModel;
-    private PatientModel $patientModel;
-    private RendezvousModel $rendezvousModel;
+    public function __construct(){
 
-    public function __construct()
-
-    {
         parent::__construct();
         $this->medecinModel = new MedecinModel();
-        $this->patientModel = new PatientModel();
-        $this->rendezvousModel = new RendezvousModel();
+    
         $this->load();
     }
 
     public function load(){
         {
-            // $this->layout = "base1";
             if (isset($_REQUEST['action'])) {
                 if ($_REQUEST['action'] == "liste-medecin") {
                     $this->listerMedecin();
@@ -42,9 +36,22 @@ class MedecinController extends controller{
     }
 
     public function listerMedecin(): void {
-        $medecins = $this->medecinModel->findAll(); // Récupérer tous les médecins
-        $this->renderView("medecins/liste", ["medecins" => $medecins]);
+
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $limit = 5; 
+        
+        $medecins = $this->medecinModel->findAll($page, $limit);
+        
+        $totalMedecins = $this->medecinModel->countAll(); 
+        $totalPages = ceil($totalMedecins / $limit); 
+    
+        $this->renderView("medecins/liste", [
+            "medecins" => $medecins,
+            "totalPages" => $totalPages,
+            "currentPage" => $page,
+        ]);
     }
+    
 
     public function chargerFormulaire():void{
         $this->renderView("medecins/form", ["medecins" => $this->medecinModel->findAll()]);
@@ -52,7 +59,6 @@ class MedecinController extends controller{
 
     public function saveMedecin(array $medecin): int
     {
-        
         $dsn= 'mysql:host=localhost:3306;dbname=gestionclinique_221';
         $username= 'root';
         $password='';
@@ -78,16 +84,14 @@ class MedecinController extends controller{
     public function ajouterMedecin(array $data): void {
         if (empty($data['nom']) || empty($data['prenom']) || empty($data['specialite'])) {
             echo "Un ou plusieurs champs requis ne sont pas définis.";
-            return; // Arrêtez l'exécution si les champs sont vides
-        }
+            return; 
+            }
     
         $result = $this->medecinModel->save($data);
         
         if ($result) {
-            // Redirection si l'ajout a réussi
             $this->redirectToRoute("controller=medecin&action=liste-medecin");
         } else {
-            // Message d'erreur si l'ajout a échoué
             echo "Erreur lors de l'ajout du médecin.";
         }
     }
@@ -96,4 +100,3 @@ class MedecinController extends controller{
 
 
 }
-?>

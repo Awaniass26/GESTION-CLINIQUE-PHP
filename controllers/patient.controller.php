@@ -4,15 +4,11 @@ require_once '../core/Controller.php';
 
 class PatientController extends controller{
    private PatientModel $patientModel;
-   
-    public function __construct()
-
-    {
+    public function __construct() {
         parent::__construct();
         $this->patientModel = new PatientModel();
         $this->load();
     }
-
     public function load(){
         {
             // $this->layout = "base1";
@@ -35,15 +31,31 @@ class PatientController extends controller{
     }
 
     public function listerPatient(): void {
-        $patients = $this->patientModel->findAll(); 
-        $this->renderView("patients/list", ["patients" => $patients]);
+        $patients = $this->patientModel->findAll();
+        $limit = 5; // Nombre de patients par page
+        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $totalPatients = $this->patientModel->countPatients();
+        $totalPages = ceil($totalPatients / $limit);
+        $offset = ($currentPage - 1) * $limit;
+
+        
+    
+        $patients = $this->patientModel->findAllPaginated($offset, $limit);
+        $this->renderView("patients/list", [
+            "patients" => $patients,
+            "currentPage" => $currentPage,
+            "totalPages" => $totalPages
+        ]);
     }
+    
 
     public function ajouterPatient(array $data): void
     {
         $this->patientModel->save($data);
         header("Location: " . WEBROOT . "/?controller=patient&action=list-patient");
         exit();
+
+    
     }
 
     public function chargerFormulaire():void{

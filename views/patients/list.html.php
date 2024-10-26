@@ -26,7 +26,7 @@
                         <a href="<?= WEBROOT ?>/?controller=patient&action=list-patient" class="hover:text-gray-300">Patient</a>
                     </li>
                     <li>
-                        <a href="<?= WEBROOT ?>/?controller=rendezvous&action=form-rendezvous" class="hover:text-gray-300">Rendezvous</a>
+                        <a href="<?= WEBROOT ?>/?controller=rendezvous&action=list-rendezvous" class="hover:text-gray-300">Rendezvous</a>
                     </li>
                 </ul>
             </div>
@@ -67,6 +67,28 @@
                         <?php else: ?>
                             <p>Aucun patient trouvé.</p>
                         <?php endif; ?>
+
+                        <div class="flex justify-end my-4">
+                            <nav class="relative z-0 inline-flex rounded-md shadow-sm">
+                                <?php if ($currentPage > 1): ?>
+                                    <a href="?controller=patient&action=list-patient&page=<?= $currentPage - 1 ?>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-green-700">
+                                        &laquo;
+                                    </a>
+                                <?php endif; ?>
+
+                                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                    <a href="?controller=patient&action=list-patient&page=<?= $i ?>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium <?= $i === $currentPage ? 'bg-green-600 text-white' : 'bg-white text-gray-700 ' ?>">
+                                        <?= $i ?>
+                                    </a>
+                                <?php endfor; ?>
+
+                                <?php if ($currentPage < $totalPages): ?>
+                                    <a href="?controller=patient&action=list-patient&page=<?= $currentPage + 1 ?>" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white ">
+                                        &raquo;
+                                    </a>
+                                <?php endif; ?>
+                            </nav>
+                        </div>
                     </div>
                 </div>
             </div>

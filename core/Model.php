@@ -1,7 +1,5 @@
 <?php
-class Model
-{
-    
+ class Model{
     protected string  $dsn = 'mysql:host=localhost:3306;dbname=gestionclinique_221';
     protected $username = 'root';
     protected $password = '';
@@ -9,8 +7,8 @@ class Model
     protected string $table;
 
 
-public function __construct() {
-        $this->ouvrirConnexion(); // Ensure the connection is opened
+    public function __construct() {
+        $this->ouvrirConnexion(); 
     }
 
     public function ouvrirConnexion(): void {
@@ -31,8 +29,6 @@ public function __construct() {
         }
     }
 
-    
-
     protected function executeSelect(string $sql, bool $fetch = false): array|false{
     {
         try {
@@ -48,14 +44,14 @@ public function __construct() {
 }
 
     
-public function executeUpdate(string $sql): int
+    public function executeUpdate(string $sql): int
 {
     try {
         $result = $this->pdo->exec($sql);
         return $result === false ? 0 : $result; // Return 0 if exec fails
     } catch (PDOException $e) {
         echo "Erreur de Connexion: " . $e->getMessage();
-        return 0; // Return 0 on error
+        return 0; 
     }
 }
 
@@ -64,4 +60,5 @@ public function executeUpdate(string $sql): int
     {
         return $this->executeSelect("SELECT * FROM $this->table ");
     }
+
 }
