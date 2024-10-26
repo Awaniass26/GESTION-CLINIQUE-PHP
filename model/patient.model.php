@@ -3,7 +3,7 @@ require_once("../core/Model.php");
 class PatientModel extends Model {
     
     public function __construct() {
-        $this->ouvrirConnexion(); // Utilisation de la méthode de connexion fournie
+        $this->ouvrirConnexion(); 
     }
 
     public function findAll(): array {
@@ -11,7 +11,7 @@ class PatientModel extends Model {
     }
 
     public function findAllPaginated(int $offset, int $limit): array {
-        $sql = "SELECT id, nom, prrenom, date_naissance, adresse FROM patient LIMIT :offset, :limit";
+        $sql = "SELECT * FROM patient LIMIT :offset, :limit";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
@@ -44,7 +44,3 @@ class PatientModel extends Model {
         return 0;
     }
 }
-?>
-
-
-

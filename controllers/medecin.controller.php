@@ -1,8 +1,5 @@
 <?php
 require_once("../model/medecin.model.php");
-require_once("../model/patient.model.php");
-require_once("../model/rendezvous.model.php");
-
 require_once '../core/Controller.php';
 
 class MedecinController extends controller{
